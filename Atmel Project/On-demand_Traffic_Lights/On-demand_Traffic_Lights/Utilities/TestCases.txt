@@ -1,0 +1,82 @@
+/*
+ * test.txt
+ *
+ * Created: 9/11/2022 2:04:45 PM
+ *  Author: sayed
+*/ 
+
+1) DIO Driver
+-----------------
+/* Set pin 0 as output in portA */
+    DIO_vSetPinDir('A' , 0 , 1);
+	while (1) {
+		/* Write HIGH in pin 0 of port A */
+		DIO_writePin('A' , 0 , 1);
+		/* Read the value of pin 0 of port A */
+		uint8_t value = DIO_u8readPin('A' , 0);
+		printf("%d" , value);
+		/* Toggle pin 0 in port A */
+		DIO_togPin('A' , 1);
+	}
+
+------------------------------------------------------
+
+2) LED Driver
+-----------------
+/* Initialize led at pin 2 as output in port B */
+    LED_vInit('B' , 2);
+	while (1) {
+		/* TurnOn Led */
+		LED_vTurnOn('B' , 2);
+		/* TurnOff Led */
+		LED_vTurnOff('B' , 2);
+		/* Toggle Led */
+		LED_Toggle('B' , 2);
+	}
+------------------------------------------------------
+
+3) Button Driver
+-----------------
+/* Initialize button at pin 1 as input in port C */
+    Button_vInit('C' , 1);
+	while (1) {
+		/* Read the button value at pin 1 of port C */
+		uint8_t value = Button_u8read('C' , 1);
+		printf("%d" , value);
+	}
+------------------------------------------------------
+
+4) Timer Driver
+-----------------
+#include "Utilities/registers.h"
+#include "MCAL/DIO Driver/DIO.h"
+#include "ECUAL/LED Driver/Led.h"
+#include "Utilities/stdMacros.h"
+#include "Utilities/dataTypes.h"
+#include "Application/App.h"
+
+#define MAX_OVERFLOWS 2000
+volatile unsigned int overflow;
+
+int main(void){
+	// Initialize Led
+	LED_vInit('A' , 0);
+	// Initialize Timer
+	timerInit();
+	while (1) {
+		// Toggle Led
+		LED_Toggle('A' , 0);
+		// Start Timer With No Prescaler
+		timerStartWithNoPrescaler();
+		/* Stop Timer After 2000 Overflow --> 512 Milli Second */
+		// 1. Wait until overflow reaches max overflows then clear it
+		while(overflow < MAX_OVERFLOWS);
+		overflow = 0;
+		// 2. Stop Timer
+		timerStop();
+	}
+}
+
+ISR(TIMER0_OVF_vect){
+	overflow++;
+}
