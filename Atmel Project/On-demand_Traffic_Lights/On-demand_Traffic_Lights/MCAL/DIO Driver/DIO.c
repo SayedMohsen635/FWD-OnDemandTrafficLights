@@ -8,7 +8,7 @@
 #include "DIO.h"
 
 /* This method is used to set the direction of the pin in a particular register */
-void DIO_vSetPinDir(uint8_t portName , uint8_t pinNumber , uint8_t Dir){		// 'v' refers to return type void
+uint8_t DIO_vSetPinDir(uint8_t portName , uint8_t pinNumber , uint8_t Dir){		// 'v' refers to return type void
 	switch(portName){
 		case 'A':
 			if(Dir == 1){
@@ -39,13 +39,14 @@ void DIO_vSetPinDir(uint8_t portName , uint8_t pinNumber , uint8_t Dir){		// 'v'
 			}
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
 
 /* This method is used to write a value to a pin in a particular register */
-void DIO_writePin(uint8_t portName , uint8_t pinNumber , uint8_t value){
+uint8_t DIO_writePin(uint8_t portName , uint8_t pinNumber , uint8_t value){
 	switch(portName){
 		case 'A':
 			if(value == 1){
@@ -72,13 +73,14 @@ void DIO_writePin(uint8_t portName , uint8_t pinNumber , uint8_t value){
 			if(value == 1){
 				SET_BIT(PORTD , pinNumber);
 			}else{
-				CLR_BIT(PORTD , pinNumber);
+				CLR_BIT(PORTD , pinNumber);			
 			}
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
 
 /* This method is used to read a value of a pin from a particular register */
@@ -98,14 +100,14 @@ uint8_t DIO_u8readPin(uint8_t portName , uint8_t pinNumber){		// u8 refers to re
 			result = READ_BIT(PIND , pinNumber);
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
-	return result;
+	return result;							// Returned Successfully
 }
 
 /* This method is used to toggle a pin in a particular register */
-void DIO_togPin(uint8_t portName , uint8_t pinNumber){
+uint8_t DIO_togPin(uint8_t portName , uint8_t pinNumber){
 	switch(portName){
 		case 'A':
 			TOG_BIT(PORTA , pinNumber);
@@ -120,13 +122,14 @@ void DIO_togPin(uint8_t portName , uint8_t pinNumber){
 			TOG_BIT(PORTD , pinNumber);
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
 
 /* This method is used to set the direction of a whole port register */
-void DIO_setPortDir(uint8_t portName , uint8_t Dir){
+uint8_t DIO_setPortDir(uint8_t portName , uint8_t Dir){
 	switch(portName){
 		case 'A':
 			if(Dir == 1){
@@ -157,13 +160,14 @@ void DIO_setPortDir(uint8_t portName , uint8_t Dir){
 			}
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
 
 /* This method is used to write a value to a whole port register */
-void DIO_writePort(uint8_t portName , uint8_t value){
+uint8_t DIO_writePort(uint8_t portName , uint8_t value){
 	switch(portName){
 		case 'A':
 			PORTA = value;
@@ -178,9 +182,10 @@ void DIO_writePort(uint8_t portName , uint8_t value){
 			PORTD = value;
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
 
 /* This method is used to read the value of a whole port register */
@@ -200,14 +205,14 @@ uint8_t DIO_readPort(uint8_t portName){
 			result = PIND;
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
-	return result;
+	return result;								// Returned Successfully
 }
 
 /* This method is used to connect the internal pull up resistor */
-void DIO_vPullUp(uint8_t portName , uint8_t pinNumber , uint8_t connectValue){
+uint8_t DIO_vPullUp(uint8_t portName , uint8_t pinNumber , uint8_t connectValue){
 	switch(portName){
 		case 'A':
 			if(connectValue == 1){
@@ -238,13 +243,14 @@ void DIO_vPullUp(uint8_t portName , uint8_t pinNumber , uint8_t connectValue){
 			}
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
 
 /* This method is used to write the four low pins of the atmega32 of a specific port register */
-void DIO_writeLowNibble(uint8_t portName , uint8_t value){
+uint8_t DIO_writeLowNibble(uint8_t portName , uint8_t value){
 	value &= 0x0F;
 	switch(portName){
 		case 'A':
@@ -264,13 +270,14 @@ void DIO_writeLowNibble(uint8_t portName , uint8_t value){
 			PORTD |= value;
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
 
 /* This method is used to write the four high pins of the atmega32 of a specific port register */
-void DIO_writeHighNibble(uint8_t portName , uint8_t value){
+uint8_t DIO_writeHighNibble(uint8_t portName , uint8_t value){
 	value <<= 4;
 	switch(portName){
 		case 'A':
@@ -290,7 +297,8 @@ void DIO_writeHighNibble(uint8_t portName , uint8_t value){
 			PORTD |= value;
 			break;
 		default:
-			printf("Invalid Port Name");
-			break;
+			printf("Invalid Port Name");				// Error Message
+			return 1;						// Error State
 	}
+	return 0;								// Returned Successfully
 }
